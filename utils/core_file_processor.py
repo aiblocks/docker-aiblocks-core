@@ -88,7 +88,7 @@ class CoreMailer(object):
         sender = self.config.get('Config', 'from')
         recipient = self.config.get('Config', 'to')
 
-        subject = 'stellar-core crash on %(hostname)s' % template_vars
+        subject = 'aiblocks-core crash on %(hostname)s' % template_vars
         template = textwrap.dedent("""
           <p>${binary} on ${hostname} crashed at ${formatted_time} with the
           following back traces:</p>
@@ -177,11 +177,11 @@ if __name__ == "__main__":
         "cores": "/cores",
         "log": "/host/syslog",
         "log_filter": os.environ.get('CORE_LOG_FILTER'),
-        "core_filter": "stellar-core",
+        "core_filter": "aiblocks-core",
         "hostname": socket.gethostname(),
-        "from": "%(hostname)s <ops+%(hostname)s@stellar.org>",
+        "from": "%(hostname)s <ops+%(hostname)s@aiblocks.io>",
         "to": os.environ.get('CORE_ALERT_RECIPIENT'),
-        "bin": "/usr/local/bin/stellar-core",
+        "bin": "/usr/local/bin/aiblocks-core",
         "archive_command": os.environ.get('CORE_ARCHIVE_COMMAND'),
         "mode": os.environ.get('MODE', 'aws')
     })

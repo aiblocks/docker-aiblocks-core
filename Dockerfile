@@ -1,8 +1,8 @@
-FROM stellar/base:latest
+FROM aiblocks/base:latest
 
-MAINTAINER Mat Schaffer <mat@stellar.org>
+MAINTAINER AiBlocks Dev <dev@aiblocks.io>
 
-ENV STELLAR_CORE_VERSION 15.1.0-1412-90305ca9
+ENV AIBLOCKS_CORE_VERSION 1.0.0-1412-90305ca9
 
 EXPOSE 11625
 EXPOSE 11626

@@ -1,25 +1,25 @@
-# stellar-core
+# aiblocks-core
 
-Docker definitions for [stellar-core](https://github.com/stellar/stellar-core)
+Docker definitions for [aiblocks-core](https://github.com/aiblocks/aiblocks-core)
 
 # Usage
 
 
 ## A local full network
 
-This starts a 3 node local stellar-core network, all on the same docker host.
+This starts a 3 node local aiblocks-core network, all on the same docker host.
 
 Note that the provided local.env uses SDF S3 locations, so edit it to match the specifics of your environment.
 
 ```sh
 for N in 1 2; do
-  docker run --name db$N -p 544$N:5432 --env-file examples/local.env -d stellar/stellar-core-state
-  docker run --name node$N --net host -v ~/.aws:/root/.aws --volumes-from db$N --env-file examples/local.env -d stellar/stellar-core /start node$N fresh forcescp
+  docker run --name db$N -p 544$N:5432 --env-file examples/local.env -d aiblocks/aiblocks-core-state
+  docker run --name node$N --net host -v ~/.aws:/root/.aws --volumes-from db$N --env-file examples/local.env -d aiblocks/aiblocks-core /start node$N fresh forcescp
 done
 
 for N in 3; do
-  docker run --name db$N -p 544$N:5432 --env-file examples/local.env -d stellar/stellar-core-state
-  docker run --name node$N --net host -v ~/.aws:/root/.aws --volumes-from db$N --env-file examples/local.env -d stellar/stellar-core /start node$N fresh
+  docker run --name db$N -p 544$N:5432 --env-file examples/local.env -d aiblocks/aiblocks-core-state
+  docker run --name node$N --net host -v ~/.aws:/root/.aws --volumes-from db$N --env-file examples/local.env -d aiblocks/aiblocks-core /start node$N fresh
 done
 ```
 
@@ -42,33 +42,33 @@ docker ps -a | egrep '(node|db)\d+' | awk '{ print $1 }' | xargs -n1 docker rm -
 ### Catch up complete with SDF testnet
 
 ```
-docker run --name db_compat_complete -p 5541:5432 --env-file examples/compat_complete.env -d stellar/stellar-core-state
-docker run --name compat_complete --net host --volumes-from db_compat_complete --env-file examples/compat_complete.env -d stellar/stellar-core:latest /start compat_complete fresh
+docker run --name db_compat_complete -p 5541:5432 --env-file examples/compat_complete.env -d aiblocks/aiblocks-core-state
+docker run --name compat_complete --net host --volumes-from db_compat_complete --env-file examples/compat_complete.env -d aiblocks/aiblocks-core:latest /start compat_complete fresh
 ```
 
 ### Catch up minimal with SDF testnet
 
 ```
-docker run --name db_compat_minimal -p 5641:5432 --env-file examples/compat_minimal.env -d stellar/stellar-core-state
-docker run --name compat_minimal --net host --volumes-from db_compat_minimal --env-file examples/compat_minimal.env -d stellar/stellar-core:latest /start compat_minimal fresh
+docker run --name db_compat_minimal -p 5641:5432 --env-file examples/compat_minimal.env -d aiblocks/aiblocks-core-state
+docker run --name compat_minimal --net host --volumes-from db_compat_minimal --env-file examples/compat_minimal.env -d aiblocks/aiblocks-core:latest /start compat_minimal fresh
 ```
 
 ### Single node local network (with monitoring)
 
-Note that the monitoring container is invoked with the docker socket exposed. This allows the monitoring container to invoke `docker run stellar/stellar-core` to do things like process core dumps.
+Note that the monitoring container is invoked with the docker socket exposed. This allows the monitoring container to invoke `docker run aiblocks/aiblocks-core` to do things like process core dumps.
 
 ```
 docker run --name single-state \
            -p 5432:5432 \
            --env-file examples/single.env \
-           -d stellar/stellar-core-state
+           -d aiblocks/aiblocks-core-state
 
 docker run --name single \
            --net host \
            --volumes-from single-state \
            -v /volumes/main/cores:/cores -v /volumes/main/logs:/logs \
            --env-file examples/single.env \
-           -d stellar/stellar-core \
+           -d aiblocks/aiblocks-core \
            /start main fresh forcescp
 
 # optionally
@@ -77,7 +77,7 @@ docker run --name single-heka \
            --volumes-from single \
            -v /var/run/docker.sock:/var/run/docker.sock \
            --env-file examples/single.env \
-           -d stellar/heka
+           -d aiblocks/heka
 ```
 
 ## A note on capturing core files

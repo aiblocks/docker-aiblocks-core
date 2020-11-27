@@ -17,8 +17,8 @@ confd -onetime -backend=env
 
 source /etc/profile
 
-if [[ -f "/stellar-core-override.cfg" ]]; then
-  CONFIG_OPTION="--conf /stellar-core-override.cfg"
+if [[ -f "/aiblocks-core-override.cfg" ]]; then
+  CONFIG_OPTION="--conf /aiblocks-core-override.cfg"
 fi
 
 if [[ "$1" == "nopsql" ]]; then
@@ -36,31 +36,31 @@ function newdb() {
 
     if [[ -z "${NOPSQL}" ]]; then
 
-      dropdb stellar || true
-      createdb stellar
+      dropdb aiblocks || true
+      createdb aiblocks
 
-      if [[ -n "${HORIZON_PASSWORD}" ]]; then
-        dropuser horizon || true
-        createuser horizon
-        psql -c "alter user horizon with password '${HORIZON_PASSWORD}'"
+      if [[ -n "${MILLENNIUM_PASSWORD}" ]]; then
+        dropuser millennium || true
+        createuser millennium
+        psql -c "alter user millennium with password '${MILLENNIUM_PASSWORD}'"
         psql >/dev/null <<-SQL
-           GRANT CONNECT ON DATABASE stellar to horizon;
-           \c stellar
+           GRANT CONNECT ON DATABASE aiblocks to millennium;
+           \c aiblocks
            REVOKE ALL ON schema public FROM public;
            GRANT ALL ON schema public TO postgres;
-           GRANT USAGE ON SCHEMA public to horizon;
+           GRANT USAGE ON SCHEMA public to millennium;
 
-           GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO horizon;
-           GRANT SELECT ON ALL TABLES IN SCHEMA public TO horizon;
+           GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO millennium;
+           GRANT SELECT ON ALL TABLES IN SCHEMA public TO millennium;
 
-           ALTER DEFAULT PRIVILEGES FOR USER postgres IN SCHEMA public GRANT SELECT ON SEQUENCES TO horizon;
-           ALTER DEFAULT PRIVILEGES FOR USER postgres IN SCHEMA public GRANT SELECT ON TABLES TO horizon;
+           ALTER DEFAULT PRIVILEGES FOR USER postgres IN SCHEMA public GRANT SELECT ON SEQUENCES TO millennium;
+           ALTER DEFAULT PRIVILEGES FOR USER postgres IN SCHEMA public GRANT SELECT ON TABLES TO millennium;
 SQL
       fi
 
     fi
 
-    stellar-core $CONFIG_OPTION new-db
+    aiblocks-core $CONFIG_OPTION new-db
 }
 
 while [[ -n "$1" ]]; do
@@ -74,17 +74,17 @@ while [[ -n "$1" ]]; do
   fresh)
     newdb
     [[ -n "${HISTORY_RESET}" ]] && $(printf "${HISTORY_RESET}" "${SELF}") || true
-    [[ -n "${HISTORY_PUT}" ]] && stellar-core $CONFIG_OPTION new-hist "${SELF}"
+    [[ -n "${HISTORY_PUT}" ]] && aiblocks-core $CONFIG_OPTION new-hist "${SELF}"
     ;;
   newhist)
     [[ -n "${HISTORY_RESET}" ]] && $(printf "${HISTORY_RESET}" "${SELF}") || true
-    [[ -n "${HISTORY_PUT}" ]] && stellar-core $CONFIG_OPTION new-hist "${SELF}"
+    [[ -n "${HISTORY_PUT}" ]] && aiblocks-core $CONFIG_OPTION new-hist "${SELF}"
     ;;
   forcescp)
-    stellar-core $CONFIG_OPTION force-scp
+    aiblocks-core $CONFIG_OPTION force-scp
     ;;
   catchupcomplete)
-    stellar-core $CONFIG_OPTION catchup current/max
+    aiblocks-core $CONFIG_OPTION catchup current/max
     ;;
   catchuprange)
     FROM=$1
@@ -95,10 +95,10 @@ while [[ -n "$1" ]]; do
         OUTPUT=$1
         COUNT=$((TO-FROM+1))
         if [[ "${OUTPUT}" ]]; then
-            stellar-core $CONFIG_OPTION catchup $TO/$COUNT --output-file "${OUTPUT}"
+            aiblocks-core $CONFIG_OPTION catchup $TO/$COUNT --output-file "${OUTPUT}"
             shift
         else
-            stellar-core $CONFIG_OPTION catchup $TO/$COUNT
+            aiblocks-core $CONFIG_OPTION catchup $TO/$COUNT
         fi
     else
       echo "Valid ledger range required" >&2
@@ -111,10 +111,10 @@ while [[ -n "$1" ]]; do
     if [[ "${AT}" == "current" || "${AT}" -eq "${AT}" ]]; then
         OUTPUT=$1
         if [[ "${OUTPUT}" ]]; then
-            stellar-core $CONFIG_OPTION catchup $AT/0 --output-file "${OUTPUT}"
+            aiblocks-core $CONFIG_OPTION catchup $AT/0 --output-file "${OUTPUT}"
             shift
         else
-            stellar-core $CONFIG_OPTION catchup $AT/0
+            aiblocks-core $CONFIG_OPTION catchup $AT/0
         fi
     else
       echo "Valid ledger required" >&2
@@ -127,10 +127,10 @@ while [[ -n "$1" ]]; do
     if [[ "${TO}" == "current" || "${TO}" -eq "${TO}" ]]; then
         OUTPUT=$1
         if [[ "${OUTPUT}" ]]; then
-            stellar-core $CONFIG_OPTION catchup $TO/max --output-file "${OUTPUT}"
+            aiblocks-core $CONFIG_OPTION catchup $TO/max --output-file "${OUTPUT}"
             shift
         else
-            stellar-core $CONFIG_OPTION catchup $TO/max
+            aiblocks-core $CONFIG_OPTION catchup $TO/max
         fi
     else
       echo "Valid ledger required" >&2
@@ -140,10 +140,10 @@ while [[ -n "$1" ]]; do
   lasthistorycheckpoint)
     OUTPUT=$1
     if [[ "${OUTPUT}" ]]; then
-        stellar-core $CONFIG_OPTION report-last-history-checkpoint --output-file "${OUTPUT}"
+        aiblocks-core $CONFIG_OPTION report-last-history-checkpoint --output-file "${OUTPUT}"
         shift
     else
-        stellar-core $CONFIG_OPTION report-last-history-checkpoint
+        aiblocks-core $CONFIG_OPTION report-last-history-checkpoint
     fi
     SKIP_START=true
     ;;
@@ -162,10 +162,10 @@ while [[ -n "$1" ]]; do
     shift
     OUTPUT=$1
     if [[ "${OUTPUT}" ]]; then
-        stellar-core test "$TEST_FILTER" -r xml > "${OUTPUT}"
+        aiblocks-core test "$TEST_FILTER" -r xml > "${OUTPUT}"
         shift
     else
-        stellar-core test "$TEST_FILTER" -r xml
+        aiblocks-core test "$TEST_FILTER" -r xml
     fi
     SKIP_START=true
     ;;
@@ -176,7 +176,7 @@ while [[ -n "$1" ]]; do
 done
 
 if [[ -z "${SKIP_START}" ]]; then
-  exec /init -- stellar-core $CONFIG_OPTION run
+  exec /init -- aiblocks-core $CONFIG_OPTION run
 else
   echo "Setup complete. Skipping server start."
 fi

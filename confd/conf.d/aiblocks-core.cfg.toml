@@ -1,0 +1,4 @@
+[template]
+src = "aiblocks-core.cfg.tmpl"
+dest = "/aiblocks-core.cfg"
+mode = "0644"

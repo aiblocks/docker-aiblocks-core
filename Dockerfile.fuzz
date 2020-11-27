@@ -1,6 +1,6 @@
-FROM stellar/base:latest
+FROM aiblocks/base:latest
 
-MAINTAINER Mat Schaffer <mat@stellar.org>
+MAINTAINER AiBlocks Dev <dev@aiblocks.io>
 
 ENV AFL_VERSION 2.53b
 ENV FUZZER_MODE tx

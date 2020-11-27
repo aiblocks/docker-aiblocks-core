@@ -21,10 +21,10 @@ pip install boto              # for sending crash emails
 
 apt-get install -y postgresql-client sqlite3
 
-[[ -f stellar-core.deb ]] || wget -nv -O stellar-core.deb https://s3.amazonaws.com/stellar.org/releases/stellar-core/stellar-core-${STELLAR_CORE_VERSION}_amd64.deb
+[[ -f aiblocks-core.deb ]] || wget -nv -O aiblocks-core.deb https://s3.amazonaws.com/aiblocks.io/releases/aiblocks-core/aiblocks-core-${AIBLOCKS_CORE_VERSION}_amd64.deb
 
-dpkg -i stellar-core.deb
-rm stellar-core.deb
+dpkg -i aiblocks-core.deb
+rm aiblocks-core.deb
 
 # purge stuff we don't directly need
 apt-get purge -y sgml-base ucf gcc g++ xz-utils libpod-latex-perl dbus

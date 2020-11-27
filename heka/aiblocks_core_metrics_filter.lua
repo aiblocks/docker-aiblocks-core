@@ -83,7 +83,7 @@ function inject_for_influx(ns, output)
   if next(output) then
     local message = {
       Timestamp = ns,
-      Type = "stellar.core.metrics.influx"
+      Type = "aiblocks.core.metrics.influx"
     }
 
     message.Payload = cjson.encode(output)
@@ -99,7 +99,7 @@ function send_to_atlas(ns)
       environment = environment,
       cluster = cluster,
       node = node,
-      app = "stellar-core"
+      app = "aiblocks-core"
     },
     metrics = {
     }
@@ -135,7 +135,7 @@ function inject_for_atlas(ns, output)
   if next(output.metrics) then
     local message = {
       Timestamp = ns,
-      Type = "stellar.core.metrics.atlas"
+      Type = "aiblocks.core.metrics.atlas"
     }
 
     message.Payload = cjson.encode(output)

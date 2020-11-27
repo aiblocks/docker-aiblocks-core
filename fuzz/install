@@ -48,9 +48,9 @@ cd ..
 rm -rf AFL-${AFL_VERSION}
 rm afl-${AFL_VERSION}.tgz
 
-# build stellar-core under fuzzer
-git clone https://github.com/stellar/stellar-core stellar-core
-cd stellar-core
+# build aiblocks-core under fuzzer
+git clone https://github.com/aiblocks/aiblocks-core aiblocks-core
+cd aiblocks-core
 ./autogen.sh
 ./configure --enable-afl
 make -j $(nproc)

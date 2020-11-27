@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-CORES=$(find /cores -maxdepth 1 -name 'stellar-core*.core')
+CORES=$(find /cores -maxdepth 1 -name 'aiblocks-core*.core')
 
 mkdir -p /cores/traces
 
@@ -18,10 +18,10 @@ apt-get install -qq libstdc++6 libpq5 lldb-5.0
 
 cat > /etc/core_file_processor.ini <<INI
 [Config]
-bin=/stellar-core/src/stellar-core
+bin=/aiblocks-core/src/aiblocks-core
 mode=local
 INI
 
-for CORE in /cores/stellar-core*.core; do
+for CORE in /cores/aiblocks-core*.core; do
     /utils/core_file_processor.py $CORE > /cores/traces/$(basename $CORE).trace
 done

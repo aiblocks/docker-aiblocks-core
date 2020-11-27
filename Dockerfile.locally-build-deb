@@ -1,6 +1,6 @@
-FROM stellar/base:latest
+FROM aiblocks/base:latest
 
-MAINTAINER Mat Schaffer <mat@stellar.org>
+MAINTAINER AiBlocks Dev <dev@aiblocks.io>
 
 EXPOSE 11625
 EXPOSE 11626
@@ -8,7 +8,7 @@ EXPOSE 11626
 VOLUME /data
 VOLUME /heka
 
-ADD stellar-core.deb /
+ADD aiblocks-core.deb /
 ADD install /
 RUN /install
 

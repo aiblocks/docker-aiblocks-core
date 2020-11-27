@@ -1,25 +1,25 @@
 # -*- mode: toml -*-
 # vi: set ft=toml :
 
-[StellarCoreMetricsInput]
+[AiBlocksCoreMetricsInput]
 type = "HttpInput"
 url = "http://localhost:{{getenv (printf "%s_HTTP_PORT" (getenv "SELF"))}}/metrics"
 ticker_interval = 1
 
-[StellarCoreMetricsFilter]
+[AiBlocksCoreMetricsFilter]
 type = "SandboxFilter"
 message_matcher = "Type == 'heka.httpinput.data'"
-filename = "/heka/stellar_core_metrics_filter.lua"
+filename = "/heka/aiblocks_core_metrics_filter.lua"
 ticker_interval = {{or (getenv "METRICS_INTERVAL") 60}}
-  [StellarCoreMetricsFilter.config]
+  [AiBlocksCoreMetricsFilter.config]
   environment = "{{getenv "ENVIRONMENT"}}"
   cluster = "{{getenv "CLUSTER_NAME"}}"
   node = "{{getenv "HOSTNAME"}}"
 
 {{if (getenv "INFLUX_ADDRESS")}}
-[StellarCoreMetricsInfluxOutput]
+[AiBlocksCoreMetricsInfluxOutput]
 type = "HttpOutput"
-message_matcher = "Type == 'heka.sandbox.stellar.core.metrics.influx'"
+message_matcher = "Type == 'heka.sandbox.aiblocks.core.metrics.influx'"
 address = "{{getenv "INFLUX_ADDRESS"}}"
 encoder = "PayloadEncoder"
 username = "{{getenv "INFLUX_USERNAME"}}"
@@ -27,12 +27,12 @@ password = "{{getenv "INFLUX_PASSWORD"}}"
 {{end}}
 
 {{if (getenv "ATLAS_ADDRESS")}}
-[StellarCoreMetricsAtlasOutput]
+[AiBlocksCoreMetricsAtlasOutput]
 type = "HttpOutput"
-message_matcher = "Type == 'heka.sandbox.stellar.core.metrics.atlas'"
+message_matcher = "Type == 'heka.sandbox.aiblocks.core.metrics.atlas'"
 address = "{{getenv "ATLAS_ADDRESS"}}"
 encoder = "PayloadEncoder"
-  [StellarCoreMetricsAtlasOutput.headers]
+  [AiBlocksCoreMetricsAtlasOutput.headers]
   Content-Type = ["application/json"]
 {{end}}
 
@@ -61,7 +61,7 @@ stderr = true
           "--log-driver", "syslog",
           {{end}}
           "-t", "--rm",
-          "stellar/stellar-core",
+          "aiblocks/aiblocks-core",
           "/utils/core_file_processor.py"]
 {{end}}
 
